@@ -66,17 +66,13 @@ load() {
 end_game() {
   local WINNER_SYMBOL=$1
   echo "======================"
-  echo "The winner is: "
+  printf "The winner is: "
   if [[ $WINNER_SYMBOL == $USER1_SYMBOL && $USER2 != "COMPUTER" ]]; then
-    printf "USER1"
-  else
-    printf "USER2"
-  fi
-
-  if [[ $WINNER_SYMBOL == $USER1_SYMBOL && $USER2 == "COMPUTER" ]]; then
-    printf "USER1"
-  else
-    printf "COMPUTER"
+    printf "USER1\n"
+  elif [[ $WINNER_SYMBOL == $USER2_SYMBOL && $USER2 != "COMPUTER" ]]; then
+    printf "USER2\n"
+  elif [[ $WINNER_SYMBOL == $USER2_SYMBOL && $USER2 == "COMPUTER" ]]; then
+    printf "COMPUTER\n"
   fi
   echo "======================"
   exit 0
@@ -87,7 +83,9 @@ check_vertical_lines() {
       NEXT=$(($i + 3))
       NEXTNEXT=$(($NEXT + 3))
       WINNER_SYMBOL=${STATE[$i]}
-      [[ ${STATE[$i]} == ${STATE[$NEXT]} ]] && [[ ${STATE[$NEXT]} == ${STATE[$NEXTNEXT]} ]] && end_game $WINNER_SYMBOL
+      if [[ ${STATE[$i]} == ${STATE[$NEXT]} ]] && [[ ${STATE[$NEXT]} == ${STATE[$NEXTNEXT]} ]]; then
+        end_game $WINNER_SYMBOL
+      fi
   done
 }
 
@@ -96,14 +94,20 @@ check_horizontal_lines() {
     NEXT=$(($i + 1))
     NEXTNEXT=$(($NEXT + 1))
     WINNER_SYMBOL=${STATE[$i]}
-    [[ ${STATE[$i]} == ${STATE[$NEXT]} ]] && [[ ${STATE[$NEXT]} == ${STATE[$NEXTNEXT]} ]] && end_game $WINNER_SYMBOL
+    if [[ ${STATE[$i]} == ${STATE[$NEXT]} ]] && [[ ${STATE[$NEXT]} == ${STATE[$NEXTNEXT]} ]]; then
+      end_game $WINNER_SYMBOL
+    fi
   done
 }
 
 check_diagonal_lines() {
   WINNER_SYMBOL=${STATE[5]}
-  [[ ${STATE[1]} == ${STATE[5]} ]] && [[ ${STATE[5]} == ${STATE[9]} ]] && end_game $WINNER_SYMBOL
-  [[ ${STATE[7]} == ${STATE[5]} ]] && [[ ${STATE[5]} == ${STATE[3]} ]] && end_game $WINNER_SYMBOL
+  if [[ ${STATE[1]} == ${STATE[5]} ]] && [[ ${STATE[5]} == ${STATE[9]} ]]; then
+    end_game $WINNER_SYMBOL
+  fi
+  if [[ ${STATE[7]} == ${STATE[5]} ]] && [[ ${STATE[5]} == ${STATE[3]} ]]; then
+    end_game $WINNER_SYMBOL
+  fi
 }
 
 # This will check if game ended and who won
