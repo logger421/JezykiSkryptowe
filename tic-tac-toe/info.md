@@ -14,6 +14,7 @@ This is a simple implementation of bash tic-tac-toe game.
 
 
 TODO
-- [ ] Save should be saved and loaded correctly.
-- [ ] Loaded save should start correctly from next user tour.
-- [ ] After saving and starting new tour game state should be restarted.
+- [x] Save should be saved and loaded correctly.
+- [x] Loaded save should start correctly from next user tour.
+- [x] After saving and starting new tour game state should be restarted.
+- [ ] Refactor code to use less global variables
