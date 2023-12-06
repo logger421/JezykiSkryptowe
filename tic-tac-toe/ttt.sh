@@ -3,12 +3,13 @@
 GAMEPLAY_CHOICE_REGEX='^[0-9]$'
 GAMEPLAY_COMP_CHOICE_REGEX='^[1-9]$'
 MENU_CHOICE_REGEX='^[0-4]$'
+
 SAVE_AND_EXIT=false
+
 USER1_SYMBOL=X
 USER2_SYMBOL=O
 
 SAVES_DIR="$(dirname $0)/saves"
-echo "Saves dir: $SAVES_DIR"
 
 STATE=([1]=1 [2]=2 [3]=3 [4]=4 [5]=5 [6]=6 [7]=7 [8]=8 [9]=9)
 
@@ -48,18 +49,45 @@ save() {
     mkdir $SAVES_DIR
     echo "Created directory $SAVES_DIR"
   fi
-  FILE_TIMESTAMP=$(date +%s)
+
+  local FILE_TIMESTAMP=$(date +%s)
+  local SAVE_FILENAME="$SAVES_DIR/save_$FILE_TIMESTAMP"
+
+  echo "${STATE[*]}" > "$SAVE_FILENAME"
+  printf $1 >> "$SAVE_FILENAME"
+  # reset state of the game
+  STATE=([1]=1 [2]=2 [3]=3 [4]=4 [5]=5 [6]=6 [7]=7 [8]=8 [9]=9)
 }
 
 # This will load state of game from selected save
+# shellcheck disable=SC2120
 load() {
-  if [ ! -d "SAVES_DIR" ]; then
+  if [ ! -d "$SAVES_DIR" ]; then
       echo "$SAVES_DIR doesn't exists, so there are no saves to load!"
   else
-    echo 'Choose file to load data:'
-    ls -l "$SAVES_DIR"
-    printf "Enter filename: "
-    read -r SAVE_FILENAME
+    declare -a file_list
+    local file_list=($SAVES_DIR/*)
+
+    for ((idx = 1; idx <= $#file_list; idx++)); do
+        printf "%s) %s\n" "$idx" "${file_list[idx]}"
+    done
+
+    printf "Enter filename number: "
+    read -r file_index
+    {
+      read -r state_line
+      read -r user_x
+     } < "${file_list[$file_index]}"
+
+    STATE=(${(s: :)state_line})
+
+    if [[ $user_x == "USER1" ]]; then
+      draw_game
+      vs_player "USER1" "USER2"
+    elif [[ $user_x == "USER2" ]]; then
+      draw_game
+      vs_player "USER2" "USER1"
+    fi
   fi
 }
 
@@ -124,12 +152,12 @@ player_move() {
   # check if input is valid
   if ! [[ $CHOICE =~ $GAMEPLAY_CHOICE_REGEX ]]; then
     echo "Invalid input"
-    player_move $1 $2
+    player_move "$1" "$2"
   fi
 
   # check if user pressed 0 then save and exit to main menu
   if [[ $CHOICE == 0 ]]; then
-    save
+    save "$2"
     SAVE_AND_EXIT=true
     return 0
   fi
@@ -137,7 +165,7 @@ player_move() {
   # check if selected value was not selected
   if ! [[ ${STATE[$CHOICE]} =~ $GAMEPLAY_CHOICE_REGEX ]]; then
     echo "Already occupied"
-    player_move $1 $2
+    player_move "$1" "$2"
   fi
   STATE[$CHOICE]=$1
 }
@@ -150,8 +178,17 @@ computer_move() {
 
 # player vs player gameplay
 vs_player() {
+  local USER1="$1"
+  local USER2="$2"
+  if [[ $USER1 == 'USER1' ]]; then
+      USER1_SYMBOL='X'
+      USER2_SYMBOL='O'
+  elif [[ $USER1 == 'USER2' ]]; then
+      USER1_SYMBOL='0'
+      USER2_SYMBOL='X'
+  fi
   while true; do
-    player_move $USER1_SYMBOL 'USER1'
+    player_move $USER1_SYMBOL $USER1
     if $SAVE_AND_EXIT; then
       SAVE_AND_EXIT=false
       echo "Game saved. Exiting."
@@ -159,7 +196,7 @@ vs_player() {
     fi
     draw_game
     check_winner
-    player_move $USER2_SYMBOL 'USER2'
+    player_move $USER2_SYMBOL $USER2
     if $SAVE_AND_EXIT; then
       echo "Game saved. Exiting."
       SAVE_AND_EXIT=false
@@ -190,7 +227,7 @@ while true; do
   if [[ $MENU_CHOICE == 1 ]]; then
     USER2="USER2"
     draw_game
-    vs_player
+    vs_player "USER1" $USER2
   fi
   if [[ $MENU_CHOICE == 2 ]]; then
     USER2="COMPUTER"
