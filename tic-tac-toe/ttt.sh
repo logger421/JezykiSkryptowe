@@ -60,7 +60,6 @@ save() {
 }
 
 # This will load state of game from selected save
-# shellcheck disable=SC2120
 load() {
   if [ ! -d "$SAVES_DIR" ]; then
       echo "$SAVES_DIR doesn't exists, so there are no saves to load!"
@@ -78,6 +77,7 @@ load() {
       read -r state_line
       read -r user_x
      } < "${file_list[$file_index]}"
+    rm "${file_list[$file_index]}"
 
     STATE=(${(s: :)state_line})
 
@@ -99,6 +99,8 @@ end_game() {
     printf "USER1\n"
   elif [[ $WINNER_SYMBOL == $USER2_SYMBOL && $USER2 != "COMPUTER" ]]; then
     printf "USER2\n"
+  elif [[ $WINNER_SYMBOL == $USER1_SYMBOL && $USER2 == "COMPUTER" ]]; then
+      printf "USER1\n"
   elif [[ $WINNER_SYMBOL == $USER2_SYMBOL && $USER2 == "COMPUTER" ]]; then
     printf "COMPUTER\n"
   fi
@@ -162,7 +164,7 @@ player_move() {
     return 0
   fi
 
-  # check if selected value was not selected
+  # check if selected value was not selected yet
   if ! [[ ${STATE[$CHOICE]} =~ $GAMEPLAY_CHOICE_REGEX ]]; then
     echo "Already occupied"
     player_move "$1" "$2"
@@ -233,10 +235,8 @@ while true; do
     USER2="COMPUTER"
     draw_game
     vs_computer
-    exit 0
   fi
   if [[ $MENU_CHOICE == 3 ]]; then
     load
-    exit 0
   fi
 done
