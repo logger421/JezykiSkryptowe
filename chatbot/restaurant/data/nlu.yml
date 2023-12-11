@@ -55,3 +55,29 @@ nlu:
     - are you a human?
     - am I talking to a bot?
     - am I talking to a human?
+
+- intent: ask_opening_hours
+  examples: |
+    - What are your opening hours on [Monday](day)?
+    - Will you be open at [19:00](time) on [Friday](day)?
+    - Is the restaurant open at [7:30PM] on [Thursday](day)?
+
+- intent: ask_open_now
+  examples: |
+    - Is the restaurant open now?
+    - Are you currently open?
+    - Open at this moment?
+    - Is the restaurant currently open?
+
+- intent: list_menu
+  examples: |
+    - Can I see the menu?
+    - What do you have on your menu?
+    - List the menu items.
+    - Could you show me the menu?
+
+- intent: place_order
+  examples: |
+    - I would like to order a [Pizza](menu_item) and a [Burger](menu_item).
+    - Add a [Lasagne](menu_item) to my order.
+    - I want [Spaghetti Carbonara](menu_item) but without onions.
