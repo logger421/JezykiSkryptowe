@@ -58,15 +58,23 @@ nlu:
 
 - intent: ask_opening_hours
   examples: |
-    - Is the restaurant open now?
     - What are your opening hours on [Monday](day)?
     - Will you be open at [19:00](time) on [Friday](day)?
+    - Is the restaurant open at [7:30PM] on [Thursday](day)?
+
+- intent: ask_open_now
+  examples: |
+    - Is the restaurant open now?
+    - Are you currently open?
+    - Open at this moment?
+    - Is the restaurant currently open?
 
 - intent: list_menu
   examples: |
     - Can I see the menu?
     - What do you have on your menu?
     - List the menu items.
+    - Could you show me the menu?
 
 - intent: place_order
   examples: |

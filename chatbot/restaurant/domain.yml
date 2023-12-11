@@ -5,9 +5,38 @@ intents:
   - goodbye
   - affirm
   - deny
-  - mood_great
-  - mood_unhappy
   - bot_challenge
+  - ask_opening_hours
+  - list_menu
+  - place_order
+
+entities:
+- day
+- time
+- menu_item
+- date
+
+slots:
+  menu_item:
+    type: list
+    mappings:
+    - type: from_entity
+      entity: menu_item
+  date:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: date
+  day:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: day
+  time:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: time
 
 responses:
   utter_greet:
@@ -21,6 +50,19 @@ responses:
 
   utter_iamabot:
   - text: "I am a bot, powered by Rasa."
+
+  utter_list_menu:
+    - text: "Certainly please check below what we could offer:"
+
+  utter_take_order:
+    - text: "What would you like to order?"
+
+  utter_give_open_hours:
+    - text: "Sure"
+
+actions:
+  - action_check_opening_hours
+  - action_list_menu
 
 session_config:
   session_expiration_time: 60

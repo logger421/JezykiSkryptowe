@@ -1,3 +1,5 @@
 tic-tac-toe/saves
 .venv
 .idea
+.rasa
+models
