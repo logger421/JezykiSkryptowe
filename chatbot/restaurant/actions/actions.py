@@ -43,8 +43,6 @@ class ActionCheckOpeningHours(Action):
         requested_day = tracker.get_slot('day')
         requested_time = tracker.get_slot('time')
 
-        dispatcher.utter_message(text=f"Day: {requested_day}, time: {requested_time}, date: {requested_date}")
-
         with open('actions/opening_hours.json') as json_file:
             data = json.load(json_file)
             hours = data['items'].get(requested_day, None)
@@ -55,6 +53,7 @@ class ActionCheckOpeningHours(Action):
                 dispatcher.utter_message(text=f"We're closed on {requested_day} at {requested_time}.")
 
         return []
+
 
 class ActionListMenu(Action):
 

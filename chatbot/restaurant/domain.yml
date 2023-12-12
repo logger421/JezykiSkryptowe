@@ -51,9 +51,6 @@ responses:
   utter_iamabot:
   - text: "I am a bot, powered by Rasa."
 
-  utter_list_menu:
-    - text: "Certainly please check below what we could offer:"
-
   utter_take_order:
     - text: "What would you like to order?"
 

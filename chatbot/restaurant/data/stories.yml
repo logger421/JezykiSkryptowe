@@ -10,8 +10,7 @@ stories:
 - story: list menu
   steps:
     - intent: list_menu
-    - action: utter_list_menu
-    - action: utter_list_menu
+    - action: action_list_menu
 
 - story: list opening hours
   steps:
