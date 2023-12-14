@@ -5,6 +5,7 @@ intents:
   - goodbye
   - affirm
   - deny
+  - inform
   - bot_challenge
   - ask_opening_hours
   - list_menu
@@ -14,52 +15,85 @@ entities:
 - day
 - time
 - menu_item
+- special_request
 - date
 
 slots:
   menu_item:
     type: list
+    influence_conversation: false
     mappings:
     - type: from_entity
       entity: menu_item
+  special_request:
+    type: bool
+    influence_conversation: false
+    mappings:
+    - type: from_intent
+      intent: affirm
+      value: true
+      conditions:
+      - active_loop: place_order_form
+        requested_slot: special_request
+    - type: from_intent
+      intent: deny
+      value: false
+      conditions:
+      - active_loop: place_order_form
+        requested_slot: special_request
   date:
     type: text
+    influence_conversation: false
     mappings:
     - type: from_entity
       entity: date
   day:
     type: text
+    influence_conversation: false
     mappings:
     - type: from_entity
       entity: day
   time:
     type: text
+    influence_conversation: false
     mappings:
     - type: from_entity
       entity: time
 
 responses:
   utter_greet:
-  - text: "Hey! How are you?"
-
+  - text: "Hey! How can I help you?"
   utter_did_that_help:
   - text: "Did that help you?"
-
   utter_goodbye:
   - text: "Bye"
-
   utter_iamabot:
   - text: "I am a bot, powered by Rasa."
-
-  utter_take_order:
-    - text: "What would you like to order?"
-
   utter_give_open_hours:
     - text: "Sure"
+  utter_ask_menu_item:
+    - text: "What would you like to order?"
+  utter_ask_special_request:
+    - text: "Any special request regarding ordered items?"
+  utter_submit:
+    - text: "All done!"
+  utter_slots_values:
+    - text: "I am going to place an order using the following parameters:\n
+              - menu_item: {menu_item}\n
+              - special_request: {special_request}"
+
+forms:
+  place_order_form:
+    required_slots:
+      - menu_item
+      - special_request
 
 actions:
+  - action_check_if_open
+  - action_check_open_now
   - action_check_opening_hours
   - action_list_menu
+  - action_take_order
 
 session_config:
   session_expiration_time: 60

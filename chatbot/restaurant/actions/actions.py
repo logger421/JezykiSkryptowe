@@ -31,10 +31,9 @@ def convert_time_to_int(time_str):
     return parsed_time.hour
 
 
-class ActionCheckOpeningHours(Action):
-
+class ActionCheckIfOpen(Action):
     def name(self) -> Text:
-        return "action_check_opening_hours"
+        return "action_check_if_open"
 
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
@@ -55,6 +54,47 @@ class ActionCheckOpeningHours(Action):
         return []
 
 
+class ActionCheckOpenNow(Action):
+    def name(self) -> Text:
+        return "action_check_open_now"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        dispatcher.utter_message(text=f"specified_time={tracker.get_slot('specified_time')}")
+        now = datetime.now()
+        requested_day = now.strftime("%A")
+        requested_time = int(now.strftime("%H%M"))
+
+        with open('actions/opening_hours.json') as json_file:
+            data = json.load(json_file)
+            hours = data['items'].get(requested_day, None)
+
+            if hours and hours['open'] <= requested_time <= hours['close']:
+                dispatcher.utter_message(text=f"Yes, we are open now.")
+            else:
+                dispatcher.utter_message(text=f"No, we are closed.")
+
+        return []
+
+class ActionCheckOpeningHours(Action):
+    def name(self) -> Text:
+        return "action_check_opening_hours"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        requested_day = tracker.get_slot('day')
+        dispatcher.utter_message(text=f"requested_day is {requested_day}")
+        with open('actions/opening_hours.json') as json_file:
+            data = json.load(json_file)
+            hours = data['items'].get(requested_day, None)
+            dispatcher.utter_message(text=f"We're open on {requested_day} from {hours['open']} to {hours['close']}.")
+
+        return []
+
 class ActionListMenu(Action):
 
     def name(self) -> Text:
@@ -73,5 +113,36 @@ class ActionListMenu(Action):
                 response += f"- {item['name']}: ${item['price']}\n"
 
             dispatcher.utter_message(text=response)
+
+        return []
+
+
+class ActionTakeOrder(Action):
+
+    def name(self) -> Text:
+        return "action_take_order"
+
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        order_items = tracker.get_slot("menu_item")
+        dispatcher.utter_message(f"order items: {order_items}")
+
+        # Validate order items
+        validated_order = []
+        for item in order_items:
+            if item in menu_names:
+                validated_order.append(item)
+            else:
+                dispatcher.utter_message(text=f"Sorry, we don't have {item} on the menu.")
+
+        # Construct order confirmation message
+        if validated_order:
+            order_confirmation = "You have ordered: "
+            order_confirmation += ", ".join(validated_order)
+            if special_requests:
+                order_confirmation += ". With special requests: "
+                order_confirmation += ", ".join(special_requests)
+            dispatcher.utter_message(text=order_confirmation)
+        else:
+            dispatcher.utter_message(text="Please choose items from our menu.")
 
         return []

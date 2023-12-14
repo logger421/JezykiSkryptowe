@@ -16,6 +16,7 @@ nlu:
     - goodmorning
     - goodevening
     - good afternoon
+    - Welcome
 
 - intent: goodbye
   examples: |
@@ -56,11 +57,11 @@ nlu:
     - am I talking to a bot?
     - am I talking to a human?
 
-- intent: ask_opening_hours
+- intent: ask_if_open
   examples: |
-    - What are your opening hours on [Monday](day)?
     - Will you be open at [19:00](time) on [Friday](day)?
-    - Is the restaurant open at [7:30PM] on [Thursday](day)?
+    - Is the restaurant open at [7:30PM](time) on [Thursday](day)?
+    - Is the restaurant open on [Wednesday](day) at [5:30PM](time)?
 
 - intent: ask_open_now
   examples: |
@@ -68,6 +69,16 @@ nlu:
     - Are you currently open?
     - Open at this moment?
     - Is the restaurant currently open?
+
+- intent: ask_opening_hours
+  examples: |
+    - Is the restaurant open on [monday](day)?
+    - Are you open on [Saturday](day)
+    - Will restaurant be open on [Friday](day)
+    - What are the opening hours on [Wednesday](day)
+    - When will you close on [Friday](day)?
+    - How long are you open on [Monday](day)>
+    - What are the closing hours of the restaurant on Wednesday?
 
 - intent: list_menu
   examples: |

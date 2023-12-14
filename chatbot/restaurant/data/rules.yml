@@ -1,13 +1,46 @@
 version: "3.1"
 
 rules:
-
 - rule: Say goodbye anytime the user says goodbye
   steps:
   - intent: goodbye
   - action: utter_goodbye
 
+- rule: Say hello anytime the user says hello
+  steps:
+  - intent: greet
+  - action: utter_greet
+
 - rule: Say 'I am a bot' anytime the user challenges
   steps:
   - intent: bot_challenge
   - action: utter_iamabot
+
+- rule: List menu anytime user asks about it
+  steps:
+  - intent: list_menu
+  - action: action_list_menu
+
+- rule: Return open hours anytime user asks about it
+  steps:
+  - intent: ask_if_open
+  - action: action_check_if_open
+
+- rule: Chek if open now anytime user asks sbout it
+  steps:
+  - intent: ask_open_now
+  - action: action_check_open_now
+
+- rule: Return opening hours anytime user asks about it
+  steps:
+  - intent: ask_opening_hours
+  - action: action_check_opening_hours
+
+- rule: activate place order form
+  steps:
+    - intent: place_order
+    - action: place_order_form
+    - active_loop: place_order_form
+    - active_loop: null
+    - action: utter_submit
+    - action: utter_slots_values
