@@ -39,14 +39,14 @@ class ActionCheckIfOpen(Action):
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
-        requested_day = tracker.get_slot('day')
+        requested_day = tracker.get_slot('day').lower().capitalize()
         requested_time = tracker.get_slot('time')
 
         with open('actions/opening_hours.json') as json_file:
             data = json.load(json_file)
             hours = data['items'].get(requested_day, None)
 
-            if hours and hours['open'] <= convert_time_to_int(requested_time) <= hours['close']:
+            if hours and hours['open'] <= convert_time_to_int(requested_time) < hours['close']:
                 dispatcher.utter_message(text=f"We're open on {requested_day} at {requested_time}.")
             else:
                 dispatcher.utter_message(text=f"We're closed on {requested_day} at {requested_time}.")
@@ -62,16 +62,15 @@ class ActionCheckOpenNow(Action):
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
-        dispatcher.utter_message(text=f"specified_time={tracker.get_slot('specified_time')}")
         now = datetime.now()
-        requested_day = now.strftime("%A")
-        requested_time = int(now.strftime("%H%M"))
+        requested_day = now.strftime("%A").lower().capitalize()
+        requested_time = convert_time_to_int(now.strftime('%H:%M'))
 
         with open('actions/opening_hours.json') as json_file:
             data = json.load(json_file)
             hours = data['items'].get(requested_day, None)
 
-            if hours and hours['open'] <= requested_time <= hours['close']:
+            if hours and hours['open'] <= int(requested_time) < hours['close']:
                 dispatcher.utter_message(text=f"Yes, we are open now.")
             else:
                 dispatcher.utter_message(text=f"No, we are closed.")
@@ -86,7 +85,7 @@ class ActionCheckOpeningHours(Action):
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
-        requested_day = tracker.get_slot('day')
+        requested_day = tracker.get_slot('day').lower().capitalize()
         dispatcher.utter_message(text=f"requested_day is {requested_day}")
         with open('actions/opening_hours.json') as json_file:
             data = json.load(json_file)

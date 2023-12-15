@@ -7,9 +7,11 @@ intents:
   - deny
   - inform
   - bot_challenge
-  - ask_opening_hours
   - list_menu
   - place_order
+  - ask_opening_hours
+  - ask_if_open
+  - ask_open_now
 
 entities:
 - day
