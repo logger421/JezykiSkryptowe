@@ -77,6 +77,7 @@ class ActionCheckOpenNow(Action):
 
         return []
 
+
 class ActionCheckOpeningHours(Action):
     def name(self) -> Text:
         return "action_check_opening_hours"
@@ -93,6 +94,7 @@ class ActionCheckOpeningHours(Action):
             dispatcher.utter_message(text=f"We're open on {requested_day} from {hours['open']} to {hours['close']}.")
 
         return []
+
 
 class ActionListMenu(Action):
 
@@ -122,10 +124,20 @@ class ActionTakeOrder(Action):
         return "action_take_order"
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        order_items = tracker.get_slot("menu_item")
-        dispatcher.utter_message(f"order items: {order_items}")
+        order_items = tracker.get_latest_entity_values("menu_item")
+        special_request = tracker.get_latest_entity_values("special_request")
+        special_request_items = tracker.get_latest_entity_values("special_request_item")
 
-        # Validate order items
+        dispatcher.utter_message(f"order items: {order_items}")
+        dispatcher.utter_message(f"special requests: {special_request}")
+        dispatcher.utter_message(f"special requests items: {special_request_items}")
+
+        # Load menu items from JSON file
+        with open('actions/menu.json', 'r') as file:
+            menu = json.load(file)["items"]
+
+        menu_names = [item["name"] for item in menu]
+
         validated_order = []
         for item in order_items:
             if item in menu_names:
@@ -137,9 +149,9 @@ class ActionTakeOrder(Action):
         if validated_order:
             order_confirmation = "You have ordered: "
             order_confirmation += ", ".join(validated_order)
-            if special_requests:
+            if special_request:
                 order_confirmation += ". With special requests: "
-                order_confirmation += ", ".join(special_requests)
+                order_confirmation += ", ".join(special_request_items)
             dispatcher.utter_message(text=order_confirmation)
         else:
             dispatcher.utter_message(text="Please choose items from our menu.")

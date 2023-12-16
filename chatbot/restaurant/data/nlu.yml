@@ -1,6 +1,43 @@
 version: "3.1"
 
 nlu:
+- synonym: Monday
+  examples: |
+    - monday
+    - mon
+    - md
+- synonym: Tuesday
+  examples: |
+    - tuesday
+    - tue
+    - td
+- synonym: Wednesday
+  examples: |
+    - wednesday
+    - wed
+    - wd
+- synonym: Thursday
+  examples: |
+    - thursday
+    - thu
+    - th
+    - tr
+- synonym: Friday
+  examples: |
+    - friday
+    - fri
+    - fr
+- synonym: Saturday
+  examples: |
+    - saturday
+    - sat
+    - st
+- synonym: Sunday
+  examples: |
+    - sunday
+    - sun
+    - su
+
 - intent: greet
   examples: |
     - hey
@@ -31,6 +68,26 @@ nlu:
     - bye bye
     - see you later
 
+- intent: chitchat
+  examples: |
+    - What is the weather?
+    - Mind your own business
+    - None of your business
+    - Why are you asking me about it?
+    - Why do you need this information
+    - How old are you?
+    - Do you smile often?
+    - Are you happy?
+    - Do you like sunny days?
+    - This isn't working
+    - I already told you
+    - that's not right
+    - wait stop
+    - that's not what I want to do
+    - nevermind
+    - stop asking
+    - I changed my mind
+
 - intent: affirm
   examples: |
     - yes
@@ -39,6 +96,11 @@ nlu:
     - of course
     - that sounds good
     - correct
+    - fine
+    - you bet
+    - ok
+    - more or less
+    - ok great
 
 - intent: deny
   examples: |
@@ -49,6 +111,8 @@ nlu:
     - don't like that
     - no way
     - not really
+    - no thanks
+    - absolutely not
 
 - intent: bot_challenge
   examples: |
@@ -74,10 +138,14 @@ nlu:
   examples: |
     - Is the restaurant open on [monday](day)?
     - Are you open on [Saturday](day)
+    - Are you open on [sat](day)
     - Will restaurant be open on [Friday](day)
+    - Will restaurant be open on [fr](day)
     - What are the opening hours on [Wednesday](day)
+    - What are the opening hours on [wednesday](day)
     - When will you close on [Friday](day)?
     - How long are you open on [Monday](day)>
+    - How long are you open on [md](day)>
     - What are the closing hours of the restaurant on Wednesday?
 
 - intent: list_menu
@@ -91,4 +159,8 @@ nlu:
   examples: |
     - I would like to order a [Pizza](menu_item) and a [Burger](menu_item).
     - Add a [Lasagne](menu_item) to my order.
-    - I want [Spaghetti Carbonara](menu_item) but without onions.
+    - I want [Spaghetti Carbonara](menu_item) but [without onions](special_request_item).
+    - I would like to place an order for [Hot-dog](menu_item) and a [Tiramisu](menu_item) as dessert, but [non alcoholic](special_request_item).
+    - I would like to order [lasagne](menu_item) but [without cheese](special_request_item)
+    - I would like a [Pizza](menu_item) but with [extra cheese](special_request_item) 
+    - One [Burger](menu_item) please.

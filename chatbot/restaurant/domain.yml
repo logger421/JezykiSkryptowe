@@ -3,6 +3,7 @@ version: "3.1"
 intents:
   - greet
   - goodbye
+  - chitchat
   - affirm
   - deny
   - inform
@@ -18,6 +19,7 @@ entities:
 - time
 - menu_item
 - special_request
+- special_request_item
 - date
 
 slots:
@@ -27,8 +29,15 @@ slots:
     mappings:
     - type: from_entity
       entity: menu_item
+  special_request_item:
+    type: list
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: special_request_item
   special_request:
     type: bool
+    initial_value: false
     influence_conversation: false
     mappings:
     - type: from_intent
@@ -77,18 +86,26 @@ responses:
     - text: "What would you like to order?"
   utter_ask_special_request:
     - text: "Any special request regarding ordered items?"
+  utter_ask_special_request_item:
+    - text: "What special request would you like to place?"
   utter_submit:
     - text: "All done!"
   utter_slots_values:
     - text: "I am going to place an order using the following parameters:\n
               - menu_item: {menu_item}\n
-              - special_request: {special_request}"
+              - special_request: {special_request}
+              - special_request_items: {special_request_items}"
+  utter_ask_continue:
+    - text: "I don't understand, do you want to continue?"
+  utter_default:
+    - text: "Sorry I didn't get that. Can you rephrase?"
 
 forms:
   place_order_form:
     required_slots:
       - menu_item
       - special_request
+      - special_request_item
 
 actions:
   - action_check_if_open

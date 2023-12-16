@@ -26,7 +26,7 @@ rules:
   - intent: ask_if_open
   - action: action_check_if_open
 
-- rule: Chek if open now anytime user asks sbout it
+- rule: Check if open now anytime user asks about it
   steps:
   - intent: ask_open_now
   - action: action_check_open_now
@@ -44,3 +44,4 @@ rules:
     - active_loop: null
     - action: utter_submit
     - action: utter_slots_values
+    - action: action_take_order
