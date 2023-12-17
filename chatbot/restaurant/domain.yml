@@ -13,6 +13,7 @@ intents:
   - ask_opening_hours
   - ask_if_open
   - ask_open_now
+  - place_order_with_special
 
 entities:
 - day
@@ -29,12 +30,12 @@ slots:
     mappings:
     - type: from_entity
       entity: menu_item
-  special_item:
+  special_request_item:
     type: list
     influence_conversation: false
     mappings:
     - type: from_entity
-      entity: special_item
+      entity: special_request_item
   special_request_keyword:
     type: text
     influence_conversation: false

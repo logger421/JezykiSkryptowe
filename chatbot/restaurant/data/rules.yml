@@ -43,5 +43,5 @@ rules:
 
 - rule: Take order from order with special request
   steps:
-  - intent: place_order
-  - action: place_order_with_special
+  - intent: place_order_with_special
+  - action: action_take_order
