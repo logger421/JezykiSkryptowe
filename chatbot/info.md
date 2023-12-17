@@ -13,5 +13,7 @@ with checking if restaurant is open and what restaurant could offer to him.
 6. (optional) Chatbot should ask and confirm the delivery address instead of pick-up option.
 
 ### TODO
-- [ ] Integration with discord should work correctly
+- [x] Integration with discord should work correctly
 - [ ] Small refactoring
+- [ ] Bot should work for public channels, currently it's working on private chat. It could be creation problem.
+- [ ] Discord messages formatting should be added, for now all is flattened during snd/rec.
