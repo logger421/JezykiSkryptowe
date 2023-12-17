@@ -6,11 +6,13 @@ rasa_url = "http://localhost:5005/webhooks/rest/webhook"
 
 
 async def send_message_to_rasa(message, user_message):
-    payload = {"sender": message.author, "message": user_message}
+    payload = {"sender": message.author.id, "message": user_message}
     try:
         response = requests.post(rasa_url, json=payload)
-
-        await message.channel.send(response)
+        if response.json():
+            await message.channel.send( ''.join(response['text'] for response in response.json() if int(response['recipient_id']) == int(message.author.id)))
+        else:
+            await message.channel.send("Sorry, something went wrong. Please try again.")
     except Exception as e:
         print(e)
 
