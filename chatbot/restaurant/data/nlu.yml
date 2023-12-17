@@ -165,7 +165,28 @@ nlu:
 - intent: place_order_with_special
   examples: |
     - I want [Spaghetti Carbonara](menu_item) but [without](special_request_keyword) [onions](special_request_item).
-    - I would like to place an order for [Hot-dog](menu_item) and a [Tiramisu](menu_item) as dessert, but [no](special_request_keyword) [caco](special_request_item).
+    - I would like to place an order for [Hot-dog](menu_item) but [no](special_request_keyword) [ketchup](special_request_item).
     - I would like to order [lasagne](menu_item) but [without](special_request_keyword) [cheese](special_request_item)
     - I would like a [Pizza](menu_item) but [with extra](special_request_keyword) [cheese](special_request_item)
-    - I would like a [Pizza](menu_item) but [with extra](special_request_keyword) [mushrooms](special_request_item) and [cheese](special_request_item)
+    - I would like a [Pizza](menu_item) but [no extra](special_request_keyword) [mushrooms](special_request_item)
+
+- intent: show_order
+  examples: |
+    - Can I see my order?
+    - Could you show me ordered items?
+    - Could you list me what I have ordered?
+    - Let me see my items
+
+- intent: confirm_order
+  examples: |
+    - Yes, that will be all!
+    - Great, that's all for me.
+    - Yup, it's all I wanted.
+    - Yes, that's correct. Thank you.
+    - Yes
+    - Absolutely
+    - Certainly.
+    - Y
+    - y
+    - Yes, sir!
+    - Sure.

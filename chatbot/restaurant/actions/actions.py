@@ -86,7 +86,6 @@ class ActionCheckOpeningHours(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-
         requested_day = tracker.get_slot('day').lower().capitalize()
         dispatcher.utter_message(text=f"requested_day is {requested_day}")
         with open('actions/opening_hours.json') as json_file:
@@ -105,7 +104,6 @@ class ActionListMenu(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-
         with open('actions/menu.json') as json_file:
             data = json.load(json_file)
             menu_items = data['items']
@@ -125,36 +123,79 @@ class ActionTakeOrder(Action):
         return "action_take_order"
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        order_items = tracker.get_slot("menu_item")
+        order_item = tracker.get_slot("menu_item")
         special_request_keyword = tracker.get_slot("special_request_keyword")
-        special_request_items = tracker.get_slot("special_request_item")
+        special_request_item = tracker.get_slot("special_request_item")
+        order = tracker.get_slot("order")
 
-        dispatcher.utter_message(text=f"order items: {order_items}")
-        dispatcher.utter_message(text=f"special request keyword: {special_request_keyword}")
-        dispatcher.utter_message(text=f"special requests items: {special_request_items}")
+        if not order:
+            order = []
 
-        # Load menu items from JSON file
         with open('actions/menu.json', 'r') as file:
             menu = json.load(file)["items"]
 
         menu_names = [item["name"] for item in menu]
 
-        validated_order = []
-        for item in order_items:
-            if item in menu_names:
-                validated_order.append(item)
+        if order_item in menu_names:
+            if special_request_item and special_request_keyword:
+                order.append(f"{order_item} - {special_request_keyword} {special_request_item}")
             else:
-                dispatcher.utter_message(text=f"Sorry, we don't have {item} on the menu.")
-
-        # Construct order confirmation message
-        if validated_order:
-            order_confirmation = "You have ordered: "
-            order_confirmation += ", ".join(validated_order)
-            if special_request:
-                order_confirmation += ". With special requests: "
-                order_confirmation += ", ".join(special_request_items)
-            dispatcher.utter_message(text=order_confirmation)
+                order.append(f"{order_item}")
         else:
-            dispatcher.utter_message(text="Please choose items from our menu.")
+            dispatcher.utter_message(text=f"Sorry, we don't have {order_item} on the menu.")
+            return [SlotSet("menu_item", None),
+                    SlotSet("special_request_keyword", None),
+                    SlotSet("special_request_item", None)]
 
+        dispatcher.utter_message("Certainly! Adding to order. Would you like to add something else?")
+
+        return [SlotSet("order", order),
+                SlotSet("menu_item", None),
+                SlotSet("special_request_keyword", None),
+                SlotSet("special_request_item", None)]
+
+
+class ActionShowOrder(Action):
+    def name(self):
+        return "action_show_order"
+
+    def run(self, dispatcher, tracker, domain):
+        order = tracker.get_slot("order")
+
+        if not order:
+            dispatcher.utter_message("Your order is empty.")
+
+        else:
+            dispatcher.utter_message("As far you have ordered: ")
+            for item in order:
+                dispatcher.utter_message(f"- {item}")
+            dispatcher.utter_message("Is that all?")
         return []
+
+
+class ActionFinalizeOrder(Action):
+    def name(self):
+        return "action_finalize_order"
+
+    def run(self, dispatcher: CollectingDispatcher, tracker, domain):
+        order = tracker.get_slot("order")
+        if not order or len(order) == 0:
+            dispatcher.utter_message("Your order is empty. Please add something before proceeding!")
+            return []
+
+        with open('actions/menu.json', 'r') as file:
+            menu = json.load(file)["items"]
+
+            delivery_time = 0
+            for item in order:
+                for menu_item in menu:
+                    item_name = item.split()[0].lower().capitalize()
+                    if menu_item["name"] == item_name:
+                        delivery_time += menu_item["preparation_time"]
+
+            dispatcher.utter_message(text="Your order: ")
+            for item in order:
+                dispatcher.utter_message(f"- {item}")
+            dispatcher.utter_message(f"Your estimated delivery time: {delivery_time}")
+
+        return [SlotSet("order", None)]

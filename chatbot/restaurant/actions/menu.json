@@ -3,32 +3,32 @@
     {
       "name": "Lasagne",
       "price": 16,
-      "preparation_time": 1
+      "preparation_time": 15
     },
     {
       "name": "Pizza",
       "price": 12,
-      "preparation_time": 0.5
+      "preparation_time": 20
     },
     {
       "name": "Hot-dog",
       "price": 4,
-      "preparation_time": 0.1
+      "preparation_time": 5
     },
     {
       "name": "Burger",
       "price": 12.5,
-      "preparation_time": 0.2
+      "preparation_time": 10
     },
     {
       "name": "Spaghetti Carbonara",
       "price": 15,
-      "preparation_time": 0.5
+      "preparation_time": 20
     },
     {
       "name": "Tiramisu",
       "price": 11,
-      "preparation_time": 0.15
+      "preparation_time": 3
     }
   ]
 }

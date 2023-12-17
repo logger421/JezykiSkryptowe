@@ -14,6 +14,8 @@ intents:
   - ask_if_open
   - ask_open_now
   - place_order_with_special
+  - confirm_order
+  - show_order
 
 entities:
 - day
@@ -25,13 +27,13 @@ entities:
 
 slots:
   menu_item:
-    type: list
+    type: text
     influence_conversation: false
     mappings:
     - type: from_entity
       entity: menu_item
   special_request_item:
-    type: list
+    type: text
     influence_conversation: false
     mappings:
     - type: from_entity
@@ -42,6 +44,10 @@ slots:
     mappings:
     - type: from_entity
       entity: special_request_keyword
+  order:
+    type: list
+    mappings:
+      - type: custom
   date:
     type: text
     influence_conversation: false
@@ -62,38 +68,36 @@ slots:
       entity: time
 
 responses:
+  utter_default:
+    - text: "Sorry I didn't get that. Can you rephrase?"
   utter_greet:
   - text: "Hey! How can I help you?"
-  utter_did_that_help:
-  - text: "Did that help you?"
   utter_goodbye:
   - text: "Bye"
+  utter_did_that_help:
+  - text: "Did that help you?"
   utter_iamabot:
   - text: "I am a bot, powered by Rasa."
+  utter_affirm:
+    - text: "Ok, I understand"
+  utter_submit:
+    - text: "All done!"
   utter_give_open_hours:
     - text: "Sure"
   utter_ask_menu_item:
     - text: "What would you like to order?"
-  utter_submit:
-    - text: "All done!"
-  utter_slots_values:
-    - text: "I am going to place an order using the following parameters:\n
-              - menu_item: {menu_item}\n
-              - special_request: {special_request_keyword}\n
-              - special_request_items: {special_request_item}"
   utter_ask_continue:
     - text: "I don't understand, do you want to continue?"
-  utter_default:
-    - text: "Sorry I didn't get that. Can you rephrase?"
-  utter_affirm:
-    - text: "Ok, I understand"
-
+  utter_confirm_order:
+    - text: "Is that all?"
 actions:
   - action_check_if_open
   - action_check_open_now
   - action_check_opening_hours
   - action_list_menu
   - action_take_order
+  - action_show_order
+  - action_finalize_order
 
 session_config:
   session_expiration_time: 60
