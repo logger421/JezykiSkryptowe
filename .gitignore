@@ -3,3 +3,4 @@ tic-tac-toe/saves
 .idea
 .rasa
 models
+.env
