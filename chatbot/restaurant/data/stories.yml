@@ -31,3 +31,39 @@ stories:
           - slot_was_set:
               - special_request_keyword
       - action: action_take_order
+      - intent: show_order
+      - action: action_show_order
+      - intent: confirm_order
+      - action: action_finalize_order
+  - story: Greet an order multiple items
+    steps:
+      - intent: greet
+      - action: utter_greet
+      - intent: place_order
+        entities:
+          - menu_item: "pizza"
+          - slot_was_set:
+              - menu_item
+      - action: action_take_order
+      - intent: place_order
+        entities:
+          - menu_item: "Burger"
+          - slot_was_set:
+              - menu_item
+      - action: action_take_order
+      - intent: place_order
+        entities:
+          - menu_item: "Hot-dog"
+          - special_request_keyword: "without"
+          - special_request_item: "ketchup"
+          - slot_was_set:
+              - menu_item
+          - slot_was_set:
+              - special_request_item
+          - slot_was_set:
+              - special_request_keyword
+      - action: action_take_order
+      - intent: show_order
+      - action: action_show_order
+      - intent: confirm_order
+      - action: action_finalize_order
