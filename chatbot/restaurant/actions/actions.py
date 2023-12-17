@@ -126,11 +126,11 @@ class ActionTakeOrder(Action):
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         order_items = tracker.get_slot("menu_item")
-        special_request = tracker.get_slot("special_request")
-        special_request_items = tracker.get_slot("special_item")
+        special_request_keyword = tracker.get_slot("special_request_keyword")
+        special_request_items = tracker.get_slot("special_request_item")
 
         dispatcher.utter_message(text=f"order items: {order_items}")
-        dispatcher.utter_message(text=f"special requests: {special_request}")
+        dispatcher.utter_message(text=f"special request keyword: {special_request_keyword}")
         dispatcher.utter_message(text=f"special requests items: {special_request_items}")
 
         # Load menu items from JSON file

@@ -1,88 +1,27 @@
 version: "3.1"
 
 stories:
-- story: direct order placement
-  steps:
-  - intent: place_order
-    entities:
-    - menu_item: "pizza"
-  - action: utter_submit
-  - action: utter_slots_values
-  - action: action_place_order
-
-- story: direct order placement with special
-  steps:
-  - intent: place_order_with_special
-    entities:
-    - menu_item: "pizza"
-    - special_request_keyword: "with extra"
-    - special_request_item: "cheese"
-  - action: utter_submit
-  - action: utter_slots_values
-  - action: action_place_order
-
-- story: greet before place order
-  steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: place_order
-    entities:
-    - menu_item: "pizza"
-  - action: utter_submit
-  - action: utter_slots_values
-  - action: action_place_order
-
-- story: greet before order placement with special
-  steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: place_order_with_special
-    entities:
-    - menu_item: "pizza"
-    - special_request_keyword: "with extra"
-    - special_request_item: "cheese"
-  - action: utter_submit
-  - action: utter_slots_values
-  - action: action_place_order
-
-- story: chitchat unhappy path before place order
-  steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: chitchat
-  - action: utter_ask_continue
-  - intent: deny
-  - action: utter_affirm
-  - action: utter_goodbye
-
-- story: chitchat happy path before place order
-  steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: chitchat
-  - action: utter_ask_continue
-  - intent: affirm
-  - action: utter_affirm
-  - intent: place_order
-    entities:
-    - menu_item: "pizza"
-  - action: utter_submit
-  - action: utter_slots_values
-  - action: action_place_order
-
-- story: chitchat happy path before order placement with special
-  steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: chitchat
-  - action: utter_ask_continue
-  - intent: affirm
-  - action: utter_affirm
-  - intent: place_order_with_special
-    entities:
-    - menu_item: "pizza"
-    - special_request_keyword: "with extra"
-    - special_request_item: "cheese"
-  - action: utter_submit
-  - action: utter_slots_values
-  - action: action_place_order
+  - story: Greet and place basic order
+    steps:
+      - intent: greet
+      - action: utter_greet
+      - intent: place_order
+        entities:
+          - menu_item: "pizza"
+      - action: action_take_order
+  - story: Greet and place order with special request
+    steps:
+      - intent: greet
+      - action: utter_greet
+      - intent: place_order_with_special
+        entities:
+          - menu_item: "Pizza"
+          - special_request_keyword: "without"
+          - special_request_item: "cheese"
+          - slot_was_set:
+              - menu_item
+          - slot_was_set:
+              - special_request_item
+          - slot_was_set:
+              - special_request_keyword
+      - action: action_take_order
