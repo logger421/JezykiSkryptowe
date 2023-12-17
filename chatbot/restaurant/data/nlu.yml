@@ -159,8 +159,13 @@ nlu:
   examples: |
     - I would like to order a [Pizza](menu_item) and a [Burger](menu_item).
     - Add a [Lasagne](menu_item) to my order.
-    - I want [Spaghetti Carbonara](menu_item) but [without onions](special_request_item).
-    - I would like to place an order for [Hot-dog](menu_item) and a [Tiramisu](menu_item) as dessert, but [non alcoholic](special_request_item).
-    - I would like to order [lasagne](menu_item) but [without cheese](special_request_item)
-    - I would like a [Pizza](menu_item) but with [extra cheese](special_request_item) 
     - One [Burger](menu_item) please.
+    - One [Hot-dog](menu_item) for me and [Burger](menu_item) for my friend, please.
+
+- intent: place_order_with_special
+  examples: |
+    - I want [Spaghetti Carbonara](menu_item) but [without](special_request_keyword) [onions](special_request_item).
+    - I would like to place an order for [Hot-dog](menu_item) and a [Tiramisu](menu_item) as dessert, but [no](special_request_keyword) [caco](special_request_item).
+    - I would like to order [lasagne](menu_item) but [without](special_request_keyword) [cheese](special_request_item)
+    - I would like a [Pizza](menu_item) but [with extra](special_request_keyword) [cheese](special_request_item)
+    - I would like a [Pizza](menu_item) but [with extra](special_request_keyword) [mushrooms](special_request_item) and [cheese](special_request_item)

@@ -36,12 +36,12 @@ rules:
   - intent: ask_opening_hours
   - action: action_check_opening_hours
 
-- rule: activate place order form
+- rule: Take order from basic order intent
   steps:
-    - intent: place_order
-    - action: place_order_form
-    - active_loop: place_order_form
-    - active_loop: null
-    - action: utter_submit
-    - action: utter_slots_values
-    - action: action_take_order
+  - intent: place_order
+  - action: action_take_order
+
+- rule: Take order from order with special request
+  steps:
+  - intent: place_order
+  - action: place_order_with_special

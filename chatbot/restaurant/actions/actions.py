@@ -10,6 +10,7 @@
 from typing import Any, Text, Dict, List
 
 from rasa_sdk import Action, Tracker
+from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from datetime import datetime
 
@@ -124,13 +125,13 @@ class ActionTakeOrder(Action):
         return "action_take_order"
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        order_items = tracker.get_latest_entity_values("menu_item")
-        special_request = tracker.get_latest_entity_values("special_request")
-        special_request_items = tracker.get_latest_entity_values("special_request_item")
+        order_items = tracker.get_slot("menu_item")
+        special_request = tracker.get_slot("special_request")
+        special_request_items = tracker.get_slot("special_item")
 
-        dispatcher.utter_message(f"order items: {order_items}")
-        dispatcher.utter_message(f"special requests: {special_request}")
-        dispatcher.utter_message(f"special requests items: {special_request_items}")
+        dispatcher.utter_message(text=f"order items: {order_items}")
+        dispatcher.utter_message(text=f"special requests: {special_request}")
+        dispatcher.utter_message(text=f"special requests items: {special_request_items}")
 
         # Load menu items from JSON file
         with open('actions/menu.json', 'r') as file:
