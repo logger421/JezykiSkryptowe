@@ -2,5 +2,7 @@ tic-tac-toe/saves
 .venv
 .idea
 .rasa
-models
+chatbot/restaurant/models
 .env
+lua-rest-api/logs
+nginx.conf.compiled
