@@ -22,6 +22,44 @@ app:get("/categories", function(self)
   return { json = self.json }
 end)
 
+app:get("/categories/:id[%d]", function (self)
+  self.json = Categories:find(self.params.id)
+  if self.json then
+    return { json = { success = true, category = self.json }}
+  else
+    return { json = { success = false, message = "Category for given id doesn't exists!" }}
+  end
+end)
+
+-- Get products by category they belong (named)
+app:get("/categories/:category", function(self)
+  local categoryDAO = Categories:find({ name = self.params.category })
+  if not categoryDAO then
+    return { json = { success = false, message = "No such category, products can't be listed!" }}
+  else 
+    self.json = Products:select("where category_id = ?", categoryDAO["id"])
+    return { json = { success = true, products = self.json } }
+  end
+end)
+
+app:post("/categories", json_params(function (self)
+  local req_name = self.params.name
+
+  if not req_name then
+    return { json = { success = false, message = "Incorrect request parameter"}}
+  end
+  local category = Categories:create({
+    name = req_name
+  }) 
+
+  if not category then
+    return { json = { success = false, message = "Couldn't create category with given values" }}
+  else
+    return { json = { success = true, category = category}}
+  end
+
+end))
+
 -- Get all products
 app:get("/products", function(self)
   self.json = Products:select()
@@ -29,19 +67,12 @@ app:get("/products", function(self)
 end)
 
 -- Get product by id
-app:get("/products/:id", function (self)
+app:get("/products/:id[%d]", function (self)
   self.json = Products:find(self.params.id)
-  return { json = { success = true, product = self.json } }
-end)
-
--- Get products by category they belong (named)
-app:get("/products/:category", function(self)
-  local categoryDAO = Categories:find({ name = self.params.category })
-  if not categoryDAO then
-    return { json = { success = false, message = "No such category, products can't be listed!" }}
-  else 
-    self.json = Products:select("where category_id = ?", categoryDAO["id"])
-    return { json = { success = true, products = self.json } }
+  if not self.json then
+    return { json = { success = false, message = "Category for given id doesn't exists!" }}
+  else
+    return { json = { success = true, product = self.json } }
   end
 end)
 
@@ -56,8 +87,8 @@ app:post("/products", json_params(function(self)
   end
   
   local product = Products:create({
-    name = self.params.name,
-    category_id = self.params.category_id
+    name = req_name,
+    category_id = req_category_id
   })
 
   if product then
