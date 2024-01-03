@@ -22,23 +22,30 @@ app:get("/categories", function(self)
   return { json = self.json }
 end)
 
-app:match("/categories/:category", function(self)
-  local categoryDAO = Categories:find({ name = self.params.category })
-  self.json = Products:select("where category_id = ?", categoryDAO["id"])
-  return { json = self.json }
-end)
-
 -- Get all products
 app:get("/products", function(self)
   self.json = Products:select()
   return { json = { success = true, product = self.json } }
 end)
 
+-- Get product by id
 app:get("/products/:id", function (self)
   self.json = Products:find(self.params.id)
   return { json = { success = true, product = self.json } }
 end)
 
+-- Get products by category they belong (named)
+app:get("/products/:category", function(self)
+  local categoryDAO = Categories:find({ name = self.params.category })
+  if not categoryDAO then
+    return { json = { success = false, message = "No such category, products can't be listed!" }}
+  else 
+    self.json = Products:select("where category_id = ?", categoryDAO["id"])
+    return { json = { success = true, products = self.json } }
+  end
+end)
+
+-- Add product by json body
 app:post("/products", json_params(function(self)
   local body = self.params
   local req_name  = body.name
