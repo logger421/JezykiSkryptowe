@@ -1,6 +1,7 @@
 local lapis = require("lapis")
 local Model = require("lapis.db.model").Model
 local json_params = require("lapis.application").json_params
+local respond_to = require("lapis.application").respond_to
 
 local app = lapis.Application()
 
@@ -16,11 +17,30 @@ app:get("/", function(self)
   return "Welcome to Lapis "..require("lapis.version").." based shop"
 end)
 
--- Get all categories
-app:get("/categories", function(self)
-  self.json = Categories:select()
-  return { json = self.json }
-end)
+app:match("/categories", respond_to({
+  -- Get all categories
+    GET = function(self)
+      self.json = Categories:select()
+      return { json = { success = true, category = self.json } }
+    end,
+  -- Add category by json body
+    POST = json_params(function(self)
+      local req_name = self.params.name
+
+      if not req_name then
+        return { json = { success = false, message = "Incorrect request parameter"}}
+      end
+      local category = Categories:create({
+        name = req_name
+      })
+
+      if not category then
+        return { json = { success = false, message = "Couldn't create category with given values" }}
+      else
+        return { json = { success = true, category = category}}
+      end
+    end)
+  }))
 
 app:get("/categories/:id[%d]", function (self)
   self.json = Categories:find(self.params.id)
@@ -42,29 +62,34 @@ app:get("/categories/:category", function(self)
   end
 end)
 
-app:post("/categories", json_params(function (self)
-  local req_name = self.params.name
-
-  if not req_name then
-    return { json = { success = false, message = "Incorrect request parameter"}}
-  end
-  local category = Categories:create({
-    name = req_name
-  }) 
-
-  if not category then
-    return { json = { success = false, message = "Couldn't create category with given values" }}
-  else
-    return { json = { success = true, category = category}}
-  end
-
-end))
-
+app:match("/products", respond_to({
 -- Get all products
-app:get("/products", function(self)
-  self.json = Products:select()
-  return { json = { success = true, product = self.json } }
-end)
+  GET = function(self)
+    self.json = Products:select()
+    return { json = { success = true, product = self.json } }
+  end,
+-- Add product by json body
+  POST = json_params(function(self)
+    local body = self.params
+    local req_name  = body.name
+    local req_category_id = body.category_id
+
+    if not req_name or not req_category_id then
+      return { json = { success = false, message = "Incorrect request parameters" }}
+    end
+  
+    local product = Products:create({
+      name = req_name,
+      category_id = req_category_id
+    })
+
+    if product then
+      return { json = { success = true, product = product }}
+    else 
+      return { json = { success = false, message = "Couldn't create product with given values" }}
+    end
+  end)
+}))
 
 -- Get product by id
 app:get("/products/:id[%d]", function (self)
@@ -75,27 +100,5 @@ app:get("/products/:id[%d]", function (self)
     return { json = { success = true, product = self.json } }
   end
 end)
-
--- Add product by json body
-app:post("/products", json_params(function(self)
-  local body = self.params
-  local req_name  = body.name
-  local req_category_id = body.category_id
-
-  if not req_name or not req_category_id then
-    return { json = { success = false, message = "Incorrect request parameters" }}
-  end
-  
-  local product = Products:create({
-    name = req_name,
-    category_id = req_category_id
-  })
-
-  if product then
-    return { json = { success = true, product = product }}
-  else 
-    return { json = { success = false, message = "Couldn't create product with given values" }}
-  end
-end))
 
 return app
