@@ -1,5 +1,6 @@
 local lapis = require("lapis")
 local Model = require("lapis.db.model").Model
+local json_params = require("lapis.application").json_params
 
 local app = lapis.Application()
 
@@ -8,10 +9,7 @@ local Products = Model:extend("products", {
 })
 
 local Categories = Model:extend("categories", {
-  primary_key = "id",
-  relations = {
-    { "products", has_many = "Products" }
-  }
+  primary_key = "id"
 })
 
 app:get("/", function(self)
@@ -24,16 +22,42 @@ app:get("/categories", function(self)
   return { json = self.json }
 end)
 
--- Get all products
-app:get("/products", function(self)
-  self.json = Products:select()
+app:match("/categories/:category", function(self)
+  local categoryDAO = Categories:find({ name = self.params.category })
+  self.json = Products:select("where category_id = ?", categoryDAO["id"])
   return { json = self.json }
 end)
 
-app:match("/categories/:category", function(self)
-  local categoryDAO = Categories:find({ name = self.params.category})
-  self.json = categoryDAO:get_products()
-  return { json = self.json }
+-- Get all products
+app:get("/products", function(self)
+  self.json = Products:select()
+  return { json = { success = true, product = self.json } }
 end)
+
+app:get("/products/:id", function (self)
+  self.json = Products:find(self.params.id)
+  return { json = { success = true, product = self.json } }
+end)
+
+app:post("/products", json_params(function(self)
+  local body = self.params
+  local req_name  = body.name
+  local req_category_id = body.category_id
+
+  if not req_name or not req_category_id then
+    return { json = { success = false, message = "Incorrect request parameters" }}
+  end
+  
+  local product = Products:create({
+    name = self.params.name,
+    category_id = self.params.category_id
+  })
+
+  if product then
+    return { json = { success = true, product = product }}
+  else 
+    return { json = { success = false, message = "Couldn't create product with given values" }}
+  end
+end))
 
 return app
