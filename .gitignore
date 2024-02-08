@@ -6,3 +6,4 @@ chatbot/restaurant/models
 .env
 lua-rest-api/logs
 nginx.conf.compiled
+*.iml
