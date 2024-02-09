@@ -1,0 +1,26 @@
+{
+  "id": 0,
+  "nazwa": "Harry Potter and the Philosopher's Stone",
+  "kategorie": [
+    "Książki",
+    "obcojęzyczne/Books/Children's",
+    "Books/Teen,",
+    "Young",
+    "Adult"
+  ],
+  "cena": "38.34",
+  "obnizka": "0%",
+  "szczegoly_towaru": {
+    "ID produktu:": "1096731360",
+    "Tytuł:": "Harry Potter and the Philosopher's Stone",
+    "Autor:": "Rowling J.K.",
+    "Wydawnictwo:": "Bloomsbury Publishing",
+    "Język wydania:": "angielski",
+    "Język oryginału:": "angielski",
+    "Liczba stron:": "331",
+    "Data premiery:": "2015-04-30",
+    "Rok wydania:": "2015",
+    "Forma:": "książka"
+  },
+  "link": "https://www.empik.com/harry-potter-1-and-the-philosopher-s-stone-rowling-joanne-k,p1096731360,ksiazka-p"
+}

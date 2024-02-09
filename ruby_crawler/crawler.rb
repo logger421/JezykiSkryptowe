@@ -2,8 +2,12 @@ require "httparty"
 require "nokogiri"
 require "json"
 require "watir"
+require "mongo"
 
 URL_BASE = "https://www.empik.com".freeze
+
+client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => 'crawler')
+collection = client[:products]
 
 puts "Please enter keyword to perform search: "
 search_keyword = gets.chomp
@@ -38,6 +42,7 @@ document.css("div.search-list-item").each_with_index do |product, idx|
     detailed_info,
     product_link
   )
+  collection.insert_one(new_product.to_h)
   products.push(new_product)
 
   if idx == 10 then

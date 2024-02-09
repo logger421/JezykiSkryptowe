@@ -13,4 +13,13 @@ TODO
 - [x] Należy pobrać podstawowe dane o produktach wg słów kluczowych
 - [x] Należy rozszerzyć dane o produktach o dane szczegółowe widoczne tylko na podstronie o produkcie 
 - [x] Należy zapisać linki do produktów
-- [ ] Dane należy zapisać w bazie danych np. SQLite via Sequel
+- [x] Dane należy zapisać w bazie danych np. SQLite via Sequel
+
+>Data is saved in mongoDb, entries look like:
+![egample](examples/database_view.png)
+
+>Raw data format, that could be printed to output:
+[output](examples/output.txt)
+
+>Single entry in JSON format:
+[json](examples/single_entry.json)
